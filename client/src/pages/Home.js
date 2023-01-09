@@ -15,9 +15,9 @@ export function Home() {
   
   function createGame () {
     let roomId = randomRoomGenerator();
-    setRoom(roomId);
-    console.log("room", room);
-    socket.emit("join_room", roomId);
+    let data = [];
+    data.push(player, roomId);
+    socket.emit("join_room", data);
     navigate(`/lobby/${roomId}`);
   }
 
