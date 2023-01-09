@@ -1,0 +1,59 @@
+div.Home-container {
+  background-color: rgb(120, 128, 128, 0.4);
+  width: 85%;
+  height: 85%;
+  border-radius: 1em;
+  display: flex;
+  justify-content: center;
+}
+div.Home-container-left {
+  width: 40%;
+  background-color: rgb(255, 255, 255, 0);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+div.Home-container-right {
+  width: 60%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+div.Flexbox {
+  height: 40%;
+  width: 60%;  
+  background-color: rgb(0,0,0,0.3);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  border-radius: 0.1em;
+}
+
+div.item {
+  margin: 15px;
+}
+
+.item-label {
+  color: rgb(0, 0, 0);
+  font-size: 1.5em;
+  margin-right: 15px;
+}
+
+div.break {
+  flex-basis: 100%;
+  height: 0;
+}
+
+.Button-join-game {
+  margin-left: 15px;
+}
+
+h1 {
+  font-family: 'Nosifer', cursive;
+  -webkit-text-stroke: 0.1px black;
+  font-size: 4em;
+  color: rgb(179, 10, 10);
+}
