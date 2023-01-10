@@ -19,18 +19,45 @@ const io = new Server(server, {
   },
 });
 
-// Players' array
-let users = [];
+let rooms = {};
+let roomId, playerName = "";
 
 io.on("connection", (socket) => {
   console.log(`User connected: ${socket.id}`);
-  socket.on("join_room", (data) => {
-    console.log("Room #:", data)
-    socket.join(data);
-    users.push(socket.id);
-    console.log(users);
-    socket.emit("playerArray", users);
+  // listening to create_room
+  socket.on("create_room", (data) => {
+    roomId = data[0];
+    playerName = data[1];
+    rooms[roomId]=[];
+    rooms[roomId].push(playerName);
+    console.log("CreateGame:", rooms);
+    socket.join(roomId);
+    io.emit("FirstPlayer", playerName);
   });
+<<<<<<< HEAD
 })
 
 
+=======
+  // listening to join_room
+  socket.on("join_room", (data) => {
+    roomId = data[0];
+    playerName = data[1];
+    if (rooms[roomId] && rooms[roomId].length < 4) {
+      rooms[roomId].push(playerName);
+      socket.join(roomId);
+      console.log("JoinGame",rooms)
+      socket.emit("validate", true); // Home.js
+      io.emit("JoinPlayers", rooms[roomId]); // Lobby.js
+    } else {
+      socket.emit("validate", false);
+    }
+    // listening to disconnect
+    socket.on("disconnect", () => {
+      console.log(`Client ${socket.id} disconnected`);
+      socket.leave(roomId);
+    })
+  });  
+
+})
+>>>>>>> 721dd1189e71a703c619d23a77cf93fcee9724e1
