@@ -19,16 +19,34 @@ const io = new Server(server, {
   },
 });
 
-// Players' array
-let users = [];
+let rooms = {};
+let roomId, playerName = "";
 
 io.on("connection", (socket) => {
   console.log(`User connected: ${socket.id}`);
-  socket.on("join_room", (data) => {
-    console.log("Room #:", data)
-    socket.join(data);
-    users.push(socket.id);
-    console.log(users);
-    socket.emit("playerArray", users);
+  // listening to create_room
+  socket.on("create_room", (data) => {
+    roomId = data[0];
+    playerName = data[1];
+    rooms[roomId]=[playerName];
+    socket.join(roomId);
+    socket.emit("validate", rooms);
   });
+  // listening to join_room
+  socket.on("join_room", (data) => {
+    console.log("server is working");
+    roomId = data[0];
+    playerName = data[1];
+    if (rooms[roomId]) {
+      console.log("JoinGame",rooms)
+      rooms[roomId]=[playerName];
+      socket.join(roomId);
+      socket.emit("validate", true);
+    } else {
+      socket.emit("validate", false);
+    }
+  });
+  
+  
+
 })
