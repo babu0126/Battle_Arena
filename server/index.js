@@ -28,25 +28,30 @@ io.on("connection", (socket) => {
   socket.on("create_room", (data) => {
     roomId = data[0];
     playerName = data[1];
-    rooms[roomId]=[playerName];
+    rooms[roomId]=[];
+    rooms[roomId].push(playerName);
+    console.log("CreateGame:", rooms);
     socket.join(roomId);
-    socket.emit("validate", rooms);
+    io.emit("FirstPlayer", playerName);
   });
   // listening to join_room
   socket.on("join_room", (data) => {
-    console.log("server is working");
     roomId = data[0];
     playerName = data[1];
-    if (rooms[roomId]) {
-      console.log("JoinGame",rooms)
-      rooms[roomId]=[playerName];
+    if (rooms[roomId] && rooms[roomId].length < 4) {
+      rooms[roomId].push(playerName);
       socket.join(roomId);
-      socket.emit("validate", true);
+      console.log("JoinGame",rooms)
+      socket.emit("validate", true); // Home.js
+      io.emit("JoinPlayers", rooms[roomId]); // Lobby.js
     } else {
       socket.emit("validate", false);
     }
-  });
-  
-  
+    // listening to disconnect
+    socket.on("disconnect", () => {
+      console.log(`Client ${socket.id} disconnected`);
+      socket.leave(roomId);
+    })
+  });  
 
 })

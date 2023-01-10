@@ -1,6 +1,6 @@
 import './Home.css';
 import React from 'react'
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import io from "socket.io-client";
 import { randomRoomGenerator } from '../Helper.js';
@@ -37,7 +37,7 @@ export function Home() {
         console.log("Validating the data", data);
         if (data) {
           navigate(`/lobby/${room}`);
-        } else alert("Please Enter a Valid Room Id");
+        } else alert("Please Enter a Valid Room Id or the Room is FULL!");
       })
     } else alert("Please Enter Your Name & Room Id");
   };

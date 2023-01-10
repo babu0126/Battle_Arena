@@ -4,5 +4,7 @@ div.Lobby-container {
   height: 50%;
   border-radius: 1em;
   display: flex;
-  justify-content: center;
+  background-image: url('../images/gamemenu_img.png');
+  background-size: cover;
+  background-repeat: no-repeat;
 }
