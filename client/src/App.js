@@ -2,16 +2,11 @@ import './App.css';
 import { Route, Routes } from 'react-router-dom';
 import { Home } from './pages/Home';
 import { Lobby } from './pages/Lobby';
-<<<<<<< HEAD
-import Game from './pages/Game';
-
-
-=======
 import { useState, useEffect } from 'react';
 import io from 'socket.io-client';
+import Game from './pages/Game';
 
 const socket = io.connect("http://localhost:3001");
->>>>>>> 721dd1189e71a703c619d23a77cf93fcee9724e1
 
 function App() {
 
@@ -40,16 +35,12 @@ useEffect(()=> {
     <main className="main">
         <Routes>
           <Route path="/" element={<Home />} />
-<<<<<<< HEAD
-          <Route path="/lobby/:id" element={<Lobby />} />
-          <Route path="/game" element={<Game />} />
-=======
           <Route path="/lobby/:id" element={<Lobby 
           player1={player1}
           player2={player2}
           player3={player3}
           player4={player4}/>}/>
->>>>>>> 721dd1189e71a703c619d23a77cf93fcee9724e1
+          <Route path="/game" element={<Game />} />
         </Routes>
     </main>
   );  

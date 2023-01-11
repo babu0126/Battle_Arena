@@ -11,7 +11,7 @@ export default function Game() {
       const maxY = 600 - 50;
       console.log(position.x, position.y);
       if (event.key === "ArrowUp") {
-        if (position.y > 0) {
+        if (position.y > - 1) {
         setPosition((prevPosition) => ({
           x: prevPosition.x,
           y: prevPosition.y - 10,
@@ -28,7 +28,7 @@ export default function Game() {
       }
 
       } else if (event.key === "ArrowLeft") {
-        if (position.x > 0) {
+        if (position.x > - 1) {
         setPosition((prevPosition) => ({
           x: prevPosition.x - 10,
           y: prevPosition.y,
@@ -85,7 +85,8 @@ export default function Game() {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
-
+  console.log(position.x, position.y);
+  
   return (
     <div className="container">
       <div

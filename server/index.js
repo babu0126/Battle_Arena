@@ -34,11 +34,6 @@ io.on("connection", (socket) => {
     socket.join(roomId);
     io.emit("FirstPlayer", playerName);
   });
-<<<<<<< HEAD
-})
-
-
-=======
   // listening to join_room
   socket.on("join_room", (data) => {
     roomId = data[0];
@@ -60,4 +55,3 @@ io.on("connection", (socket) => {
   });  
 
 })
->>>>>>> 721dd1189e71a703c619d23a77cf93fcee9724e1
