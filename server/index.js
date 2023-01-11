@@ -19,10 +19,20 @@ const io = new Server(server, {
   },
 });
 
-let rooms = {};
+let rooms = {}; // roomid1 {[names1,name2]}
 let roomId, playerName = "";
 
 io.on("connection", (socket) => {
+
+  socket.on("disconnecting", () => {
+    console.log("socket.room",socket.rooms); // the Set contains at least the socket ID
+  });
+
+  socket.on("disconnect", () => {
+    // socket.rooms.size === 0
+  });
+
+
   console.log(`User connected: ${socket.id}`);
   // listening to create_room
   socket.on("create_room", (data) => {
@@ -31,8 +41,10 @@ io.on("connection", (socket) => {
     rooms[roomId]=[];
     rooms[roomId].push(playerName);
     console.log("CreateGame:", rooms);
+    console.log("RoomId:", roomId);
     socket.join(roomId);
-    io.emit("FirstPlayer", playerName);
+    io.to(roomId).emit("FirstPlayer", playerName);
+    
   });
   // listening to join_room
   socket.on("join_room", (data) => {
@@ -43,7 +55,7 @@ io.on("connection", (socket) => {
       socket.join(roomId);
       console.log("JoinGame",rooms)
       socket.emit("validate", true); // Home.js
-      io.emit("JoinPlayers", rooms[roomId]); // Lobby.js
+      io.to(roomId).emit("JoinPlayers", rooms[roomId]); // Lobby.js
     } else {
       socket.emit("validate", false);
     }
@@ -53,5 +65,8 @@ io.on("connection", (socket) => {
       socket.leave(roomId);
     })
   });  
+
+
+
 
 })

@@ -5,9 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import io from "socket.io-client";
 import { randomRoomGenerator } from '../Helper.js';
 
-const socket = io.connect("http://localhost:3001");
 
-export function Home() {
+export function Home(props) {
 
   const navigate = useNavigate();
   const [room, setRoom] = useState("");
@@ -23,7 +22,7 @@ export function Home() {
     if (player) {
       roomId = randomRoomGenerator(); // Generate random Room Id
       data.push(roomId, player);
-      socket.emit("create_room", data);
+      props.socket.emit("create_room", data);
       navigate(`/lobby/${roomId}`);
     } else alert("Please Enter Your Name");
   };
@@ -32,8 +31,8 @@ export function Home() {
     if (player && room) {
       data.push(room, player);
       console.log("joinroom", data);
-      socket.emit("join_room", data);
-      socket.on("validate", function (data) {
+      props.socket.emit("join_room", data);
+      props.socket.on("validate", function (data) {
         console.log("Validating the data", data);
         if (data) {
           navigate(`/lobby/${room}`);
