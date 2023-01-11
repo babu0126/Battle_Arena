@@ -9,10 +9,9 @@ import character_img0 from "../images/sword_icon_img1.png";
 // import character_img3 from "../images/sword_icon_img4.png";
 // import character_img4 from "../images/sword_icon_img5.png";
 
-const socket = io.connect("http://localhost:3001");
-
 export function Lobby(props) {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
+  console.log(props);
 
   const { player1, player2, player3, player4 } = props;
 
