@@ -2,7 +2,6 @@ import './Home.css';
 import React from 'react'
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import io from "socket.io-client";
 import { randomRoomGenerator } from '../Helper.js';
 
 
@@ -12,28 +11,18 @@ export function Home(props) {
   const [room, setRoom] = useState("");
   const [player, setPlayer] = useState("");
 
-  // Initial an obejct to store Player name & Room Id
-  // {RoomId: PlayerName}
-
-  let data = [];
-  let roomId = "";
-
   function createGame () {
     if (player) {
-      roomId = randomRoomGenerator(); // Generate random Room Id
-      data.push(roomId, player);
-      props.socket.emit("create_room", data);
+      let roomId = randomRoomGenerator(); // Generate random Room Id
+      props.socket.emit("create_room", [roomId, player]);
       navigate(`/lobby/${roomId}`);
     } else alert("Please Enter Your Name");
   };
 
   function joinRoom () {
     if (player && room) {
-      data.push(room, player);
-      console.log("joinroom", data);
-      props.socket.emit("join_room", data);
-      props.socket.on("validate", function (data) {
-        console.log("Validating the data", data);
+      props.socket.emit("join_room", [room, player]);
+      props.socket.on("validate_room", function (data) {
         if (data) {
           navigate(`/lobby/${room}`);
         } else alert("Please Enter a Valid Room Id or the Room is FULL!");
