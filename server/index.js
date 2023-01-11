@@ -14,7 +14,7 @@ server.listen(3001, () => {
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "http://localhost:3002",
     method: ["GET", "POST"],
   },
 });
@@ -23,16 +23,6 @@ let rooms = {}; // roomid1 {[names1,name2]}
 let roomId, playerName = "";
 
 io.on("connection", (socket) => {
-
-  socket.on("disconnecting", () => {
-    console.log("socket.room",socket.rooms); // the Set contains at least the socket ID
-  });
-
-  socket.on("disconnect", () => {
-    // socket.rooms.size === 0
-  });
-
-
   console.log(`User connected: ${socket.id}`);
   // listening to create_room
   socket.on("create_room", (data) => {
@@ -46,6 +36,7 @@ io.on("connection", (socket) => {
     io.to(roomId).emit("FirstPlayer", playerName);
     
   });
+
   // listening to join_room
   socket.on("join_room", (data) => {
     roomId = data[0];

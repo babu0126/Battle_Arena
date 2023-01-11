@@ -85,6 +85,7 @@ export default function Game() {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
+  
   console.log(position.x, position.y);
   
   return (

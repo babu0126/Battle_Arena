@@ -1,8 +1,9 @@
 import "./Lobby.css";
-import React from "react";
+import React, { useEffect } from "react";
+import { useState } from "react";
 import io from "socket.io-client";
 import { useNavigate } from "react-router-dom";
-// import character_img0 from "../images/sword_icon_img1.png";
+import character_img0 from "../images/sword_icon_img1.png";
 // import character_img1 from "../images/sword_icon_img2.png";
 // import character_img2 from "../images/sword_icon_img3.png";
 // import character_img3 from "../images/sword_icon_img4.png";

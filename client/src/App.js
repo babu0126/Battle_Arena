@@ -5,9 +5,9 @@ import { Lobby } from './pages/Lobby';
 import Game from './pages/Game';
 import { useState, useEffect } from 'react';
 import io from 'socket.io-client';
-import Game from './pages/Game';
 
 const socket = io.connect("http://localhost:3001");
+
 
 function App() {
 
