@@ -2,6 +2,7 @@ import './App.css';
 import { Route, Routes } from 'react-router-dom';
 import { Home } from './pages/Home';
 import { Lobby } from './pages/Lobby';
+import Game from './pages/Game';
 import { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 
@@ -43,6 +44,7 @@ function App() {
         player2={player2}
         player3={player3}
         player4={player4}/>}/>
+        <Route path="/game" element={<Game />} />
       </Routes>
     </main>
   );  
