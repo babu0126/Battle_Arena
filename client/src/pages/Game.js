@@ -86,6 +86,8 @@ export default function Game() {
     };
   }, []);
 
+  console.log(position.x, position.y);
+  
   return (
     <div className="container">
       <div
