@@ -2,19 +2,19 @@ import React, { useState, useEffect } from "react";
 import "./Game.scss";
 
 export default function Game() {
-  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [position, setPosition] = useState({ x: 32, y: 160 });
   const [direction, setDirection] = useState(0);
 
   useEffect(() => {
     const handleKeyDown = (event) => {
-      const maxX = 800 - 50;
-      const maxY = 600 - 50;
+      const maxX = 1344;
+      const maxY = 736;
       console.log(position.x, position.y);
       if (event.key === "ArrowUp") {
-        if (position.y > - 1) {
+        if (position.y > 160) {
         setPosition((prevPosition) => ({
           x: prevPosition.x,
-          y: prevPosition.y - 10,
+          y: prevPosition.y - 16,
         }));
         setDirection('up'); // update direction
       }
@@ -22,15 +22,15 @@ export default function Game() {
         if (position.y < maxY) {
         setPosition((prevPosition) => ({
           x: prevPosition.x,
-          y: prevPosition.y + 10,
+          y: prevPosition.y + 16,
         }));
         setDirection('down'); // update direction
       }
 
       } else if (event.key === "ArrowLeft") {
-        if (position.x > - 1) {
+        if (position.x > 32) {
         setPosition((prevPosition) => ({
-          x: prevPosition.x - 10,
+          x: prevPosition.x - 16,
           y: prevPosition.y,
         }));
         setDirection('left'); // update direction
@@ -38,7 +38,7 @@ export default function Game() {
       } else if (event.key === "ArrowRight") {
        if (position.x < maxX) {
         setPosition((prevPosition) => ({
-          x: prevPosition.x + 10,
+          x: prevPosition.x + 16,
           y: prevPosition.y,
         }));
         setDirection('right'); // update direction
@@ -56,7 +56,7 @@ export default function Game() {
             : direction === "down"
             ? position.y + 50
             : position;
-        console.log("Attack!", direction);
+        console.log("Attack!");
 
         // create attack element
         const attackElement = document.createElement("div");
@@ -84,16 +84,18 @@ export default function Game() {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, []);
-  
-  console.log(position.x, position.y);
+  }, [position]);
+
+  console.log(position.x, position.y, direction);
   
   return (
     <div className="container">
+      {players.map((player) => (
       <div
         className="player"
         style={{ transform: `translate(${position.x}px, ${position.y}px)` }}
       />
+      ))}
     </div>
   );
 }

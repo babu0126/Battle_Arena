@@ -44,7 +44,7 @@ function App() {
         player2={player2}
         player3={player3}
         player4={player4}/>}/>
-        <Route path="/game" element={<Game />} />
+        <Route path="/game" element={<Game players={players} />} />
       </Routes>
     </main>
   );  

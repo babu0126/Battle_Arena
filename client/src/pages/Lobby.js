@@ -12,11 +12,12 @@ import character_img0 from "../images/sword_icon_img1.png";
 export function Lobby(props) {
   // const navigate = useNavigate();
   console.log(props);
+  const navigate = useNavigate();
 
   const { player1, player2, player3, player4 } = props;
 
   function startGame() {
-    // navigate(`/game/${roomId}`);
+    navigate(`/game/`);
   }
 
   return (
