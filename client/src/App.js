@@ -23,7 +23,7 @@ const socket = io.connect("http://localhost:3001");
 //   draw(){}
 // }
 
-const App = () => {
+function App() {
   const [room, setRoom] = useState("hello");
   const [player1, setPlayer1] = useState("");
   const [player2, setPlayer2] = useState("");
