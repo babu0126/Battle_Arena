@@ -25,70 +25,43 @@ let roomId,
   playerName,
   socketId = "";
 
-io.on("connection", (socket) => {
-  console.log(`User connected: ${socket.id}`);
+  io.on("connection", (client) => {
+    console.log(`User connected: ${client.id}`);
+    client.on("create_room", handleCreateRoom);
+    client.on("join_room", handleJoinRoom);
+    client.on("disconnect", () => {
+      client.leave(roomId);
+    });
 
-  socket.on("create_room", (data) => {
-    roomId = data[0];
-    playerName = data[1];
-    rooms[roomId] = [];
-    rooms[roomId].push(playerName);
-    console.log("CreateGame:", rooms);
-    console.log("RoomId:", roomId);
-    socket.join(roomId);
-    io.to(roomId).emit("FirstPlayer", playerName);
-  });
-  // listening to join_room
-  socket.on("join_room", (data) => {
-    roomId = data[0];
-    playerName = data[1];
-    if (rooms[roomId] && rooms[roomId].length < 4) {
-      rooms[roomId].push(playerName);
-      socket.join(roomId);
-      console.log("JoinGame", rooms);
-      socket.emit("validate", true); // Home.js
-      io.to(roomId).emit("JoinPlayers", rooms[roomId]); // Lobby.js
-      io.on("connection", (client) => {
-        console.log(`User connected: ${client.id}`);
+    function handleCreateRoom(data_room_player) {
+      roomId = data_room_player[0];
+      playerName = data_room_player[1];
+      socketId = client.id;
+      rooms[roomId] = { players: [], sockets: [] };
+      rooms[roomId]["players"].push(playerName);
+      rooms[roomId]["sockets"].push(socketId);
+      console.log("Createroom data", rooms);
+      client.join(roomId);
+      io.to(roomId).emit("InitPlayerRoom", [playerName, roomId]);
+    }
+    function handleJoinRoom(data_room_player) {
+      roomId = data_room_player[0];
+      playerName = data_room_player[1];
+      socketId = client.id;
+      console.log("playerlength", rooms[roomId]["players"].length);
 
-        client.on("create_room", handleCreateRoom);
-        client.on("join_room", handleJoinRoom);
-        client.on("disconnect", () => {
-          client.leave(roomId);
-        });
-
-        function handleCreateRoom(data_room_player) {
-          roomId = data_room_player[0];
-          playerName = data_room_player[1];
-          socketId = client.id;
-          rooms[roomId] = { players: [], sockets: [] };
-          rooms[roomId]["players"].push(playerName);
-          rooms[roomId]["sockets"].push(socketId);
-          console.log("Createroom data", rooms);
-          client.join(roomId);
-          io.to(roomId).emit("InitPlayerRoom", [playerName, roomId]);
-        }
-        function handleJoinRoom(data_room_player) {
-          roomId = data_room_player[0];
-          playerName = data_room_player[1];
-          socketId = client.id;
-          console.log("playerlength", rooms[roomId]["players"].length);
-
-          if (rooms[roomId] && rooms[roomId]["players"].length < PLAYER_LIMIT) {
-            rooms[roomId]["players"].push(playerName);
-            rooms[roomId]["sockets"].push(socketId);
-            console.log("Joinroom data", rooms);
-            client.join(roomId);
-            client.emit("validate_room", true); // Validate room is full / existed
-            io.to(roomId).emit("JoinedPlayers", [
-              rooms[roomId],
-              Object.keys(rooms)[0],
-            ]);
-          } else {
-            client.emit("validate_room", false);
-          }
-        }
-      });
+      if (rooms[roomId] && rooms[roomId]["players"].length < PLAYER_LIMIT) {
+        rooms[roomId]["players"].push(playerName);
+        rooms[roomId]["sockets"].push(socketId);
+        console.log("Joinroom data", rooms);
+        client.join(roomId);
+        client.emit("validate_room", true); // Validate room is full / existed
+        io.to(roomId).emit("JoinedPlayers", [
+          rooms[roomId],
+          Object.keys(rooms)[0],
+        ]);
+      } else {
+        client.emit("validate_room", false);
+      }
     }
   });
-});

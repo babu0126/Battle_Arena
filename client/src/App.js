@@ -24,7 +24,7 @@ const socket = io.connect("http://localhost:3001");
 // }
 
 const App = () => {
-  const [room, setRoom] = useState("");
+  const [room, setRoom] = useState("hello");
   const [player1, setPlayer1] = useState("");
   const [player2, setPlayer2] = useState("");
   const [player3, setPlayer3] = useState("");
@@ -40,7 +40,7 @@ const App = () => {
 
   useEffect(() => {
     socket.on("JoinedPlayers", (data) => {
-      console.log("Player Array:", data[0].players);
+      console.log("Player Array:", data);
       setPlayer1(data[0].players[0]);
       setPlayer2(data[0].players[1]);
       setPlayer3(data[0].players[2]);
