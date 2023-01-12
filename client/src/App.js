@@ -1,10 +1,10 @@
-import './App.css';
-import { Route, Routes } from 'react-router-dom';
-import { Home } from './pages/Home';
-import { Lobby } from './pages/Lobby';
-import { Game } from './pages/Game';
-import { useState, useEffect } from 'react';
-import io from 'socket.io-client';
+import "./App.css";
+import { Route, Routes } from "react-router-dom";
+import { Home } from "./pages/Home";
+import { Lobby } from "./pages/Lobby";
+import { Game } from "./pages/Game";
+import { useState, useEffect } from "react";
+import io from "socket.io-client";
 // import character_img0 from "../images/sword_icon_img1.png";
 import character_img1 from "./images/sword_icon_img2.png";
 // import character_img2 from "./images/sword_icon_img3.png";
@@ -23,13 +23,8 @@ const socket = io.connect("http://localhost:3001");
 //   draw(){}
 // }
 
-<<<<<<< HEAD
 const App = () => {
-
-=======
-function App() {
-  const [room, setRoom] = useState("hello");
->>>>>>> 7a1e047 (Adding different players on map)
+  const [room, setRoom] = useState("");
   const [player1, setPlayer1] = useState("");
   const [player2, setPlayer2] = useState("");
   const [player3, setPlayer3] = useState("");
@@ -40,10 +35,10 @@ function App() {
       console.log("FirstPlayer~~~~", array);
       setPlayer1(array[0]);
       setRoom(array[1]);
-  });
+    });
   }, []);
 
-  useEffect(()=> {
+  useEffect(() => {
     socket.on("JoinedPlayers", (data) => {
       console.log("Player Array:", data[0].players);
       setPlayer1(data[0].players[0]);
@@ -52,25 +47,36 @@ function App() {
       setPlayer4(data[0].players[3]);
       setRoom(data[1]);
     });
-  }, [])
+  }, []);
 
   return (
     <main className="main">
       <Routes>
-        <Route path="/" element={<Home 
-        socket={socket} />} />
-        <Route path="/lobby/:id" element={<Lobby 
-        socket={socket}
-        room={room}
-        player1={player1}
-        player2={player2}
-        player3={player3}
-        player4={player4}/>}/>
-        <Route path="/game/:id" element={<Game 
-        socket={socket}
-        characters={[player1, player2, player3, player4]}/>} />
+        <Route path="/" element={<Home socket={socket} />} />
+        <Route
+          path="/lobby/:id"
+          element={
+            <Lobby
+              socket={socket}
+              room={room}
+              player1={player1}
+              player2={player2}
+              player3={player3}
+              player4={player4}
+            />
+          }
+        />
+        <Route
+          path="/game/:id"
+          element={
+            <Game
+              socket={socket}
+              characters={[player1, player2, player3, player4]}
+            />
+          }
+        />
       </Routes>
     </main>
-  );  
-}
-export default App
+  );
+};
+export default App;

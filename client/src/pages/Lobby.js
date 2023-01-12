@@ -2,7 +2,6 @@ import "./Lobby.css";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-
 export function Lobby(props) {
   const navigate = useNavigate();
   console.log("lobby props:", props);

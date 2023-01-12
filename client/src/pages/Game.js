@@ -63,19 +63,25 @@ export function Game(props) {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
-  
+
   console.log(position.x, position.y);
   console.log("showing characters:", characters);
   return (
     <div className="container">
       <ol>
         {characters.map((id, index) => {
-         return <li
-          key = {index}
-          className='player'
-          id={`player-${index}`}
-          style={{ transform: `translate(${position.x}px, ${position.y}px)` }}
-        >{id}</li>
+          return (
+            <li
+              key={index}
+              className="player"
+              id={`player-${index}`}
+              style={{
+                transform: `translate(${position.x}px, ${position.y}px)`,
+              }}
+            >
+              {id}
+            </li>
+          );
         })}
       </ol>
     </div>
