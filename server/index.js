@@ -14,7 +14,7 @@ server.listen(3001, () => {
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3002",
+    origin: "http://localhost:3000",
     method: ["GET", "POST"],
   },
 });
@@ -30,6 +30,10 @@ io.on("connection", (client) => {
 
   client.on("create_room", handleCreateRoom);
   client.on("join_room", handleJoinRoom);
+  client.on("playerUpdated", (data) => {
+    console.log("playerUpdated:", data);
+    io.emit("sendPlayerPosition", data);
+  })
   client.on("disconnect", () => { client.leave(roomId); });
 
   function handleCreateRoom(data_room_player) {
@@ -58,4 +62,9 @@ io.on("connection", (client) => {
     } else {
       client.emit("validate_room", false);
     }}
+
+
+
+
+
 });

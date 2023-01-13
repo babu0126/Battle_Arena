@@ -32,8 +32,7 @@ export function Home(props) {
     <div className="Home-container">
       <div className="Home-container-left">
         <h1>
-          {" "}
-          Battle <br /> Arena{" "}
+          Battle <br /> Arena
         </h1>
       </div>
       <div className="Home-container-right">
@@ -48,8 +47,7 @@ export function Home(props) {
           <div className="break"></div>
           <div className="item">
             <button className="Button-create-game" onClick={createGame}>
-              {" "}
-              Create Game{" "}
+              Create Game
             </button>
           </div>
           <div className="break"></div>
@@ -59,8 +57,7 @@ export function Home(props) {
               onChange={(event) => setRoom(event.target.value)}
             />
             <button className="Button-join-game" onClick={joinRoom}>
-              {" "}
-              Join Room{" "}
+              Join Room
             </button>
           </div>
         </div>
