@@ -1,7 +1,7 @@
 import React from "react";
 import "./Game.scss";
 import { useState, useEffect } from "react";
-import { Sprite } from "../Component/Sprite"
+import Sprite from "../Component/Sprite"
 
 
 const MAX_X_BOARDER = 1344;
