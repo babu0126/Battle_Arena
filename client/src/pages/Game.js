@@ -20,7 +20,7 @@ function Game({ socket }) {
   const [gameover, setGameOver] = useState(false)
   const [playerPosition, setPlayerPosition] = useState({
     x: getRandom(32, MAX_X_BOARDER),
-    y: getRandom(32, MAX_Y_BOARDER),
+    y: getRandom(144, MAX_Y_BOARDER),
   });
 
   useEffect(() => {
@@ -85,17 +85,15 @@ function Game({ socket }) {
     if (event.keyCode === 37) {
       movePlayer("left");
       //changeSprite('left')
-      console.log("Left");
     } else if (event.keyCode === 38) {
       movePlayer("up");
-      console.log("Up");
     } else if (event.keyCode === 39) {
       movePlayer("right");
-      console.log("Right");
     } else if (event.keyCode === 40) {
       movePlayer("down");
-      console.log("Down");
-    }
+    } else if (event.keyCode === 32){
+      handleAttack();
+  }
   }
   function movePlayer(direction) {
     let newX = playerPosition.x;
