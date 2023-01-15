@@ -15,7 +15,7 @@ server.listen(3001, () => {
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "http://localhost:3002",
     method: ["GET", "POST"],
   },
 });
@@ -33,7 +33,7 @@ io.on("connection", (socket) => {
   
   // Create a new room 
   socket.on("create_room", (room, playerName) => {
-    players[socket.id] = { room: room, playerName: playerName, x: posX, y: posY, health: 100 };
+    players[socket.id] = { room: room, playerName: playerName, x: posX, y: posY, health: 100, direction: "down" };
     playerInRooms[room] =[];
     console.log("Player Object line 35", players);
     io.emit("room_created", room,playerName, socket.id);
@@ -43,7 +43,7 @@ io.on("connection", (socket) => {
   // Validate room existance and set number of players below 4  
   if(playerInRooms[room] && playerInRooms[room].length < PLAYER_LIMIT) {
     playerInRooms[room].push({playerName, socket: socket.id, room});
-    players[socket.id] = { room: room, playerName: playerName, x: posX, y: posY, health: 100 };
+    players[socket.id] = { room: room, playerName: playerName, x: posX, y: posY, health: 100, direction: "down" };
     socket.join(room);
     io.to(socket.id).emit("room_validated", true);
     io.to(room).emit("room_joined", playerInRooms[room], room);
@@ -61,6 +61,7 @@ io.on("connection", (socket) => {
       id: socket.id,
       x: data.x,
       y: data.y,
+      direction: data.playerDirection
     });
   });
 

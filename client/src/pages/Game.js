@@ -1,6 +1,8 @@
 import React from "react";
 import "./Game.scss";
 import { useState, useEffect } from "react";
+import Sprite from "../Component/Sprite"
+
 
 const MAX_X_BOARDER = 1344;
 const MAX_Y_BOARDER = 736;
@@ -49,7 +51,7 @@ function Game({ socket }) {
     socket.on("playerMoved", (data) => {
       setPlayers((prevPlayers) => ({
         ...prevPlayers,
-        [data.id]: { ...prevPlayers[data.id], x: data.x, y: data.y },
+        [data.id]: { ...prevPlayers[data.id], x: data.x, y: data.y, direction: data.direction },
       }));
     });
 
@@ -84,7 +86,6 @@ function Game({ socket }) {
   function handleKeyPress(event) {
     if (event.keyCode === 37) {
       movePlayer("left");
-      //changeSprite('left')
     } else if (event.keyCode === 38) {
       movePlayer("up");
     } else if (event.keyCode === 39) {
@@ -112,18 +113,11 @@ function Game({ socket }) {
     setPlayers((prevPlayers) => {
       return {
         ...prevPlayers,
-        [playerId]: { ...prevPlayers[playerId], x: newX, y: newY },
+        [playerId]: { ...prevPlayers[playerId], x: newX, y: newY, direction: direction },
       };
     });
     setPlayerPosition({ x: newX, y: newY });
     socket.emit("move", { x: newX, y: newY, playerDirection });
-    console.log("newX, newY:", newX, newY);
-    console.log(
-      "x, y, direction",
-      playerPosition.x,
-      playerPosition.y,
-      playerDirection
-    );
   }
 
   // Send the player's attack to the server when they attack
@@ -142,7 +136,11 @@ function Game({ socket }) {
             className="player"
             id={`player-${i}`}
             style={{ left: `${player.x}px`, top: `${player.y}px` }}
-          ></div>
+          >
+            <Sprite
+            direction={player.direction}
+            />
+          </div>
         ))}
         {gameover && <div className="gameover">GAME OVER!</div>}
       </div>
