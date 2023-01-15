@@ -37,3 +37,21 @@
 #player-3 {
   background-color: yellow;
 }
+
+.gameover {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 4em;
+  font-family: 'Nosifer', cursive;
+  font-weight: bold;
+  -webkit-text-stroke: 0.1px black;
+  color: rgb(179, 10, 10);
+  text-shadow: 2px 2px #000;
+  text-align: center;
+  z-index: 10;
+  background:rgba(0, 0, 0, 0.5);
+  padding: 1em;
+  border-radius: 10px;
+}

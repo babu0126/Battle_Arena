@@ -144,7 +144,7 @@ function Game({ socket }) {
             style={{ left: `${player.x}px`, top: `${player.y}px` }}
           ></div>
         ))}
-        {gameover && <div>Congratulations! You have won the game!</div>}
+        {gameover && <div className="gameover">GAME OVER!</div>}
       </div>
     </div>
   );
