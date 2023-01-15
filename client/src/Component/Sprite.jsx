@@ -38,7 +38,6 @@ const animation = keyframes`
     animation: ${animation} .4s steps(2) infinite; 
   `;
 const Sprite = (props) => {
-  console.log('sprite~~~', props);
   const {direction} = props;
     if (direction === 'up') {
       return (
