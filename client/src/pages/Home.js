@@ -1,27 +1,39 @@
-import "./Home.css";
-import React from "react";
+import "./Home.scss";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { randomRoomGenerator } from "../Helper.js";
 
-export function Home(props) {
+function randomRoomGenerator() {
+  return Math.random().toString(36).substring(2, 8);
+}
+
+export default function Home({ socket, user, setUser }) {
+
   const navigate = useNavigate();
   const [room, setRoom] = useState("");
-  const [player, setPlayer] = useState("");
+  const [joinRoomId, setJoinRoomId] = useState("");
+  
+
+  useEffect(()=> {
+      if(room) {
+        console.log("Home-line25-roomid", room);
+        joinRoom(room);
+      }
+    },[room])
 
   function createGame() {
-    if (player) {
-      let roomId = randomRoomGenerator(); // Generate random Room Id
-      props.socket.emit("create_room", [roomId, player]);
-      navigate(`/lobby/${roomId}`);
+    if (user) {
+      let roomId = randomRoomGenerator();
+      setRoom(roomId);
+      socket.emit("create_room", roomId, user);
     } else alert("Please Enter Your Name");
   }
 
-  function joinRoom() {
-    if (player && room) {
-      props.socket.emit("join_room", [room, player]);
-      props.socket.on("validate_room", function (data) {
-        if (data) {
+  function joinRoom(room) {
+    if (user && room) {
+      socket.emit("join_room", room, user);
+      socket.on("room_validated", (pass) => {
+        if (pass) {
           navigate(`/lobby/${room}`);
         } else alert("Please Enter a Valid Room Id or the Room is FULL!");
       });
@@ -40,8 +52,8 @@ export function Home(props) {
           <div className="item">
             <label className="item-label">Player Name</label>
             <input
-              placeholder="Player Name..."
-              onChange={(event) => setPlayer(event.target.value)}
+              placeholder="Player's Name..."
+              onChange={(event) => setUser(event.target.value)}
             />
           </div>
           <div className="break"></div>
@@ -54,9 +66,9 @@ export function Home(props) {
           <div className="item">
             <input
               placeholder="Room Number..."
-              onChange={(event) => setRoom(event.target.value)}
+              onChange={(event) => setJoinRoomId(event.target.value)}
             />
-            <button className="Button-join-game" onClick={joinRoom}>
+            <button className="Button-join-game" onClick={()=>joinRoom(joinRoomId)}>
               Join Room
             </button>
           </div>
@@ -65,3 +77,4 @@ export function Home(props) {
     </div>
   );
 }
+

@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import http from "http";
 import { Server } from "socket.io";
+import { randomPositionGenerator } from "./Helper.js";
 
 const app = express();
 app.use(cors());
@@ -20,51 +21,77 @@ const io = new Server(server, {
 });
 
 const PLAYER_LIMIT = 4;
-let rooms = {}; // roomid: { players:[name], sockets[id]}
-let roomId,
-  playerName,
-  socketId = "";
 
-io.on("connection", (client) => {
-  console.log(`User connected: ${client.id}`);
+let players = {};
+let playerInRooms = {};
 
-  client.on("create_room", handleCreateRoom);
-  client.on("join_room", handleJoinRoom);
-  client.on("playerUpdated", (data) => {
-    console.log("playerUpdated:", data);
-    io.emit("sendPlayerPosition", data);
-  })
-  client.on("disconnect", () => { client.leave(roomId); });
+io.on("connection", (socket) => {
+  console.log("A player has connected: ", socket.id);
+  let posX = randomPositionGenerator();
+  let posY = randomPositionGenerator();
+  
+  
+  // Create a new room 
+  socket.on("create_room", (room, playerName) => {
+    players[socket.id] = { room: room, playerName: playerName, x: posX, y: posY, health: 100 };
+    playerInRooms[room] =[];
+    console.log("Player Object line 35", players);
+    io.emit("room_created", room,playerName, socket.id);
+  });
 
-  function handleCreateRoom(data_room_player) {
-    roomId = data_room_player[0];
-    playerName = data_room_player[1];
-    socketId = client.id;
-    rooms[roomId]={players:[], sockets:[]};
-    rooms[roomId]["players"].push(playerName);
-    rooms[roomId]["sockets"].push(socketId);
-    console.log("Createroom data", rooms);
-    client.join(roomId);
-    io.to(roomId).emit("InitPlayerRoom", [playerName, roomId]);
-  }
-  function handleJoinRoom(data_room_player) {
-    roomId = data_room_player[0];
-    playerName = data_room_player[1];
-    socketId = client.id;
-    console.log("playerlength", rooms[roomId]["players"].length);
-    if (rooms[roomId] && rooms[roomId]["players"].length < PLAYER_LIMIT) {
-      rooms[roomId]["players"].push(playerName);
-      rooms[roomId]["sockets"].push(socketId);
-      console.log("Createroom data", rooms);
-      client.join(roomId);
-      client.emit("validate_room", true); // Validate room is full / existed
-      io.to(roomId).emit("JoinedPlayers", [rooms[roomId], Object.keys(rooms)[0]]);
-    } else {
-      client.emit("validate_room", false);
-    }}
+  socket.on("join_room", (room, playerName) => {
+  // Validate room existance and set number of players below 4  
+  if(playerInRooms[room] && playerInRooms[room].length < PLAYER_LIMIT) {
+    playerInRooms[room].push({playerName, socket: socket.id, room});
+    players[socket.id] = { room: room, playerName: playerName, x: posX, y: posY, health: 100 };
+    socket.join(room);
+    io.to(socket.id).emit("room_validated", true);
+    io.to(room).emit("room_joined", playerInRooms[room], room);
+  } else socket.emit("room_validated", false);
+});
 
+  // Add the new player to the game state
+  socket.on("move", (data) => {
+    // Update the player's position in the game state
+    players[socket.id].x = data.x;
+    players[socket.id].y = data.y;
 
+    // Broadcast the updated position to all other players
+    socket.broadcast.emit("playerMoved", {
+      id: socket.id,
+      x: data.x,
+      y: data.y,
+    });
+  });
 
+  socket.on("attack", (data) => {
+    // Check if the attack hit another player
+    for (let id in players) {
+      if (id !== socket.id) {
+        let player = players[id];
+        let dx = player.x - data.x;
+        let dy = player.y - data.y;
+        let distance = Math.sqrt(dx * dx + dy * dy);
 
+        if (distance < 50) {
+          // Reduce the hit player's health
+          player.health -= 25;
+          if (player.health <= 0) {
+            // Broadcast the player is killed, and remove the player from the game state
+            io.emit("playerKilled", id);
+            delete players[id];
+          } else {
+            // Broadcast the player is hit
+            io.emit("playerHit", id);
+          }
+        }
+      }
+    }
+  });
 
+  socket.on("disconnect", () => {
+    console.log("A player has disconnected: ", socket.id);
+    // Remove the player from the game state
+    delete players[socket.id];
+  });
 });

@@ -1,0 +1,29 @@
+div.Lobby-container {
+  background-color: rgb(120, 128, 128, 0.4);
+  width: 50%;
+  height: 50%;
+  border-radius: 1em;
+  /* background-image: url('../images/gamemenu_img.png');
+  background-size: cover;
+  background-repeat: no-repeat; */
+  display: flex;
+  flex-direction: column;
+}
+
+.Lobby-avatar {
+  display: flex;
+  flex-direction: row;
+  justify-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  font-size: 2em;
+}
+
+.Lobby-button {
+  height: 100%;
+  flex-direction: row;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 20px;
+}
