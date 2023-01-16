@@ -7,7 +7,7 @@ function randomRoomGenerator() {
   return Math.random().toString(36).substring(2, 8);
 }
 
-export default function Home({ socket, user, setUser }) {
+export default function Home({ socket, user, setUser, song }) {
 
   const navigate = useNavigate();
   const [room, setRoom] = useState("");
@@ -16,6 +16,7 @@ export default function Home({ socket, user, setUser }) {
 
   useEffect(()=> {
       if(room) {
+        song.play();
         console.log("Home-line25-roomid", room);
         joinRoom(room);
       }
