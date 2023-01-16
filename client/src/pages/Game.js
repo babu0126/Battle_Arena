@@ -38,7 +38,7 @@ function Game({ socket }) {
 
     if (isPlaying) {
       // Pause the song if it is playing
-
+      play.audio.pause();
     } else {
 
       // Play the song if it is paused
@@ -46,7 +46,7 @@ function Game({ socket }) {
     }
 
     // Change the state of song
-    setPlay({ isPlaying: !isPlaying });
+    // setPlay({ isPlaying: !isPlaying });
   };
   
   useEffect(() => {
