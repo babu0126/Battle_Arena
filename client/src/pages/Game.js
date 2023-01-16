@@ -51,7 +51,6 @@ function Game({ socket }) {
   
   useEffect(() => {
     socket.on("connect", () => {
-      playPause();
       setPlayerId(socket.id);
       setPlayers((prevPlayers) => {
         return {
@@ -82,7 +81,6 @@ function Game({ socket }) {
 
     // Update the player health when they are hit
     socket.on("playerHit", (id) => {
-      playPause();
       setPlayers((prevPlayers) => {
         let newPlayers = { ...prevPlayers };
         console.log("attacking:" + newPlayers[id]);
@@ -122,7 +120,6 @@ function Game({ socket }) {
       movePlayer("down");
     } else if (event.keyCode === 32){
       handleAttack();
-      playPause();
   }
   }
   function movePlayer(direction) {
