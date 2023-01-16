@@ -5,12 +5,15 @@ import Home from "./pages/Home";
 import Lobby from "./pages/Lobby";
 import Game from "./pages/Game";
 import io from "socket.io-client";
+import background from "./sounds/backgroundMusic.mp3";
+
 
 const socket = io.connect("http://localhost:3001");
 
 function App(props) {
   const [user, setUser] = useState("");
   const [players, setPlayers] = useState({});
+  let song = new Audio(background);
 
   useEffect(() => {
     socket.on("room_joined",(playerList, room) => {
@@ -34,14 +37,18 @@ function App(props) {
     }))
   }
 
+
   
   return (
     <main className="main">
+
     <Routes>
       <Route path="/" element={<Home 
         socket={socket}
         user={user}
-        setUser={setUser}  />}/>
+        setUser={setUser} 
+        song={song}
+        />}/>
       <Route path="/lobby/:id" element={<Lobby
       socket={socket}
       players={players} />}/>

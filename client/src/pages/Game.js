@@ -1,8 +1,9 @@
 import React from "react";
 import "./Game.scss";
 import { useState, useEffect } from "react";
-import Sprite from "../Component/Sprite";
 import scream from "../sounds/Wilhelm-Scream.mp3";
+import swing from "../sounds/slash.mp3";
+import Sprite from "../Component/Sprite"
 
 const MAX_X_BOARDER = 1344;
 const MAX_Y_BOARDER = 736;
@@ -70,6 +71,7 @@ function Game({ socket }) {
 
     // Remove the player when they are killed
     socket.on("playerKilled", (id) => {
+      setPlay(play.audio = new Audio(scream))
       playPause();
       setPlayers((prevPlayers) => {
         let newPlayers = { ...prevPlayers };
@@ -143,6 +145,8 @@ function Game({ socket }) {
 
   // Send the player's attack to the server when they attack
   function handleAttack(x, y) {
+    setPlay(play.audio = new Audio(swing))
+    playPause();
     socket.emit("attack", { x: playerPosition.x, y: playerPosition.y });
     setPlayerAttack(true);
     setTimeout(() => setPlayerAttack(false), 200);
