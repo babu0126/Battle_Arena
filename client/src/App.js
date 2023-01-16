@@ -13,25 +13,6 @@ const socket = io.connect("http://localhost:3001");
 function App(props) {
   const [user, setUser] = useState("");
   const [players, setPlayers] = useState({});
-  // const [play, setPlay] = useState({
-  //   audio: new Audio(background),
-  //   isPlaying: false,
-  // });
-
-  // const playPause = () => {
-  //   // Get state of song
-  //   let isPlaying = play.isPlaying;
-  //   if (isPlaying) {
-  //     // Pause the song if it is playing
-  //     play.audio.pause();
-  //   } else {
-  //     // Play the song if it is paused
-  //     play.audio.play();
-  //   }
-  //   // Change the state of song
-  //   // setPlay({ isPlaying: !isPlaying });
-  // };
-
   let song = new Audio(background);
 
   useEffect(() => {
@@ -60,7 +41,7 @@ function App(props) {
   
   return (
     <main className="main">
-      
+
     <Routes>
       <Route path="/" element={<Home 
         socket={socket}
