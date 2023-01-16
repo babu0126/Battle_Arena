@@ -9,17 +9,17 @@ const MAX_X_BOARDER = 1344;
 const MAX_Y_BOARDER = 736;
 
 function getRandom(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1) + min);
-    // The maximum is inclusive and the minimum is inclusive
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1) + min);
+  // The maximum is inclusive and the minimum is inclusive
 }
 
 
 function Game({ socket }) {
   const [players, setPlayers] = useState({});
   const [playerId, setPlayerId] = useState(null);
-  const [playerDirection, setPlayerDirection] = useState("down");
+  const [playerDirection, setPlayerDirection] = useState("null");
   const [playerAttack, setPlayerAttack] = useState();
   const [gameover, setGameOver] = useState(false)
   const [play, setPlay] = useState({
@@ -49,33 +49,36 @@ function Game({ socket }) {
     // setPlay({ isPlaying: !isPlaying });
   };
   
+console.log("gamepage show players!!!!!!!", players);
   useEffect(() => {
-    socket.on("connect", () => {
-      setPlayerId(socket.id);
-      setPlayers((prevPlayers) => {
-        return {
-          ...prevPlayers,
-          [socket.id]: {
-            x: playerPosition.x,
-            y: playerPosition.y,
-            health: 100,
-            direction: playerDirection,
-          },
-        };
+    socket.on("initPlayersInGame", (players, room) => {
+      console.log("initGame player and room!:", players, room);
+      setPlayerId(socket);
+      setPlayers(players);
+        // (prevPlayers) => {
+        // return {
+        //   ...prevPlayers,
+        //   [socket.id]: {
+        //     x: playerPosition.x,
+        //     y: playerPosition.y,
+        //     health: 100,
+        //     direction: playerDirection,
+        //   },
+        // };
       });
-      socket.emit("newPlayer", {
-        id: socket.id,
-        x: playerPosition.x,
-        y: playerPosition.y,
-        direction: playerDirection,
-      });
-    });
+
 
     // Update the position of other players when they move
     socket.on("playerMoved", (data) => {
+      console.log("playerMoved Line 55", data);
       setPlayers((prevPlayers) => ({
         ...prevPlayers,
-        [data.id]: { ...prevPlayers[data.id], x: data.x, y: data.y, direction: data.direction },
+        [data.id]: {
+          ...prevPlayers[data.id],
+          x: data.x,
+          y: data.y,
+          direction: data.direction,
+        },
       }));
     });
 
@@ -118,33 +121,44 @@ function Game({ socket }) {
       movePlayer("right");
     } else if (event.keyCode === 40) {
       movePlayer("down");
-    } else if (event.keyCode === 32){
+    } else if (event.keyCode === 32) {
       handleAttack();
-  }
+    }
   }
   function movePlayer(direction) {
-    let newX = playerPosition.x;
-    let newY = playerPosition.y;
+    // if (players[playerId]) {
+      console.log("playerPosition", playerPosition.x);
+      console.log("playerDirction", playerDirection);
+      let newX = playerPosition.x;
+      let newY = playerPosition.y;
 
-    if (direction === "left" && playerPosition.x > 32) {
-      newX -= 16;
-    } else if (playerPosition.y > 144 && direction === "up") {
-      newY -= 16;
-    } else if (playerPosition.x < MAX_X_BOARDER && direction === "right") {
-      newX += 16;
-    } else if (playerPosition.y < MAX_Y_BOARDER && direction === "down") {
-      newY += 16;
+      if (direction === "left" && playerPosition.x > 32) {
+        newX -= 16;
+      } else if (playerPosition.y > 144 && direction === "up") {
+        newY -= 16;
+      } else if (playerPosition.x < MAX_X_BOARDER && direction === "right") {
+        newX += 16;
+      } else if (playerPosition.y < MAX_Y_BOARDER && direction === "down") {
+        newY += 16;
+      }
+      console.log("bf movePlayer function: playerDirection State line 122:", playerDirection);
+      setPlayerDirection(direction);
+      console.log("af movePlayer function: playerDirection State line 122:", playerDirection);
+      setPlayers((prevPlayers) => {
+        return {
+          ...prevPlayers,
+          [playerId]: {
+            ...prevPlayers[playerId],
+            x: newX,
+            y: newY,
+            direction: direction,
+          },
+        };
+      });
+      setPlayerPosition({ x: newX, y: newY });
+      socket.emit("move", { x: newX, y: newY, playerDirection });
     }
-    setPlayerDirection(direction);
-    setPlayers((prevPlayers) => {
-      return {
-        ...prevPlayers,
-        [playerId]: { ...prevPlayers[playerId], x: newX, y: newY, direction: direction },
-      };
-    });
-    setPlayerPosition({ x: newX, y: newY });
-    socket.emit("move", { x: newX, y: newY, playerDirection });
-  }
+  
 
   // Send the player's attack to the server when they attack
   function handleAttack(x, y) {

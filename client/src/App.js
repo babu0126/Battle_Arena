@@ -16,6 +16,7 @@ function App(props) {
     socket.on("room_joined",(playerList, room) => {
       console.log("room_joined line 27:", playerList);
       updatePlayerList(playerList, room);
+      socket.emit("joined_lobby", room);
     });
   })
   function updatePlayerList(playerList, room) {
