@@ -32,19 +32,15 @@ function Game({ socket }) {
   });
   
   const playPause = () => {
-
     // Get state of song
     let isPlaying = play.isPlaying;
-
     if (isPlaying) {
       // Pause the song if it is playing
       play.audio.pause();
     } else {
-
       // Play the song if it is paused
       play.audio.play();
     }
-
     // Change the state of song
     // setPlay({ isPlaying: !isPlaying });
   };
