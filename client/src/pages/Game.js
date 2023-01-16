@@ -49,7 +49,7 @@ console.log("gamepage show players!!!!!!!", players);
   useEffect(() => {
     socket.on("initPlayersInGame", (players, room) => {
       console.log("initGame player and room!:", players, room);
-      setPlayerId(socket);
+      setPlayerId(socket.id);
       setPlayers(players);
         // (prevPlayers) => {
         // return {
@@ -82,7 +82,7 @@ console.log("gamepage show players!!!!!!!", players);
     socket.on("playerHit", (id) => {
       setPlayers((prevPlayers) => {
         let newPlayers = { ...prevPlayers };
-        console.log("attacking:" + newPlayers[id]);
+        // console.log("attacking:" + newPlayers[id]);
         newPlayers[id].health -= 25;
         return newPlayers;
       });
@@ -137,9 +137,9 @@ console.log("gamepage show players!!!!!!!", players);
       } else if (playerPosition.y < MAX_Y_BOARDER && direction === "down") {
         newY += 16;
       }
-      console.log("bf movePlayer function: playerDirection State line 122:", playerDirection);
+      // console.log("bf movePlayer function: playerDirection State line 122:", playerDirection);
       setPlayerDirection(direction);
-      console.log("af movePlayer function: playerDirection State line 122:", playerDirection);
+      // console.log("af movePlayer function: playerDirection State line 122:", playerDirection);
       setPlayers((prevPlayers) => {
         return {
           ...prevPlayers,
