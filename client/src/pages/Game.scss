@@ -35,10 +35,12 @@
   font-size: 2em;
   font-family: 'Nosifer', cursive;
   font-weight: bold;
+  font-style: italic;
+  opacity: 0.5;
   -webkit-text-stroke: 0.1px black;
   text-align: left;
   padding: 0.5em 0.5em 0.5em;
-  color: rgb(179, 10, 10);
+  color: black;
 }
 
 .gameover {

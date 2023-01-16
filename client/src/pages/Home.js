@@ -16,22 +16,22 @@ export default function Home({ socket, user, setUser, song }) {
 
   useEffect(()=> {
       if(room) {
-        song.play();
+        // song.play();
         console.log("Home-line25-roomid", room);
         joinRoom(room);
       }
     },[room])
-
-  function createGame() {
-    if (user) {
-      let roomId = randomRoomGenerator();
-      setRoom(roomId);
-      socket.emit("create_room", roomId, user);
-    } else alert("Please Enter Your Name");
-  }
-
-  function joinRoom(room) {
-    if (user && room) {
+    
+    function createGame() {
+      if (user) {
+        let roomId = randomRoomGenerator();
+        setRoom(roomId);
+        socket.emit("create_room", roomId, user);
+      } else alert("Please Enter Your Name");
+    }
+    
+    function joinRoom(room) {
+      if (user && room) {
       socket.emit("join_room", room, user);
       socket.on("room_validated", (pass) => {
         if (pass) {
