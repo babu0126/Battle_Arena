@@ -5,6 +5,7 @@ import scream from "../sounds/Wilhelm-Scream.mp3";
 import swing from "../sounds/slash.mp3";
 import Sprite from "../Component/Sprite";
 
+
 const MAX_X_BOARDER = 1344;
 const MAX_Y_BOARDER = 736;
 
@@ -71,6 +72,7 @@ function Game({ socket }) {
 
     // Remove the player when they are killed
     socket.on("playerKilled", (id) => {
+      setPlay.audio = new Audio(scream)
       playPause();
       setPlayers((prevPlayers) => {
         let newPlayers = { ...prevPlayers };
