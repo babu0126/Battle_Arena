@@ -29,10 +29,10 @@ function Game({ socket }) {
     y: getRandom(144, MAX_Y_BOARDER),
   });
 
+  
   const playPause = () => {
     // Get state of song
     let isPlaying = play.isPlaying;
-
     if (isPlaying) {
       // Pause the song if it is playing
       play.audio.pause();
@@ -40,7 +40,6 @@ function Game({ socket }) {
       // Play the song if it is paused
       play.audio.play();
     }
-
     // Change the state of song
     // setPlay({ isPlaying: !isPlaying });
   };
@@ -73,7 +72,7 @@ function Game({ socket }) {
     socket.on("playerHit", (id) => {
       setPlayers((prevPlayers) => {
         let newPlayers = { ...prevPlayers };
-        console.log("attacking:" + newPlayers[id]);
+        // console.log("attacking:" + newPlayers[id]);
         newPlayers[id].health -= 25;
         return newPlayers;
       });
