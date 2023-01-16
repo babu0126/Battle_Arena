@@ -2,12 +2,13 @@ import "./Lobby.scss";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function Lobby({ players }) {
+export default function Lobby({ players, socket }) {
   
   const navigate = useNavigate();
   const playersIds = Object.keys(players);
   
-  function startGame() {
+  function handleStartGame() {
+    socket.emit("gameStarted", players[playersIds[0]].roomId);
     navigate(`/game/${players[playersIds[0]].roomId}`);
   }
 
@@ -23,7 +24,7 @@ export default function Lobby({ players }) {
         })}  
       </div>
       <div className="Lobby-button">
-        <button id="start-game-button" onClick={startGame}>
+        <button id="start-game-button" onClick={handleStartGame}>
           Start Game
         </button>
       </div>
