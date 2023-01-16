@@ -38,25 +38,25 @@ const animation = keyframes`
     animation: ${animation} .4s steps(2) infinite; 
   `;
 const Sprite = (props) => {
-  const {direction} = props;
+  const {direction, style, className, id, key} = props;
     if (direction === 'up') {
       return (
-          <SpriteUp/>
+          <SpriteUp key={key} className={className} id={id} style={style}/>
       )
     } else if (direction === 'down') {
       return (
-          <SpriteDown/>
+          <SpriteDown key={key} className={className} id={id} style={style}/>
       )
     } else if (direction === 'left') {
       return (
-          <SpriteLeft/>
+          <SpriteLeft key={key} className={className} id={id} style={style}/>
       )
     } else if (direction === 'right') {
       return (
-          <SpriteRight/>
+          <SpriteRight key={key} className={className} id={id} style={style}/>
       )
     } else {
-      return <SpriteUp/>
+      return <SpriteUp key={key} className={className} id={id} style={style}/>
     }
 }
 

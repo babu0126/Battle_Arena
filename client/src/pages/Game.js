@@ -2,6 +2,7 @@ import React from "react";
 import "./Game.scss";
 import { useState, useEffect } from "react";
 import Sprite from "../Component/Sprite"
+import scream from '../sounds/Wilhelm-Scream.mp3'
 
 
 const MAX_X_BOARDER = 1344;
@@ -14,19 +15,43 @@ function getRandom(min, max) {
     // The maximum is inclusive and the minimum is inclusive
 }
 
+
 function Game({ socket }) {
   const [players, setPlayers] = useState({});
   const [playerId, setPlayerId] = useState(null);
   const [playerDirection, setPlayerDirection] = useState("down");
   const [playerAttack, setPlayerAttack] = useState();
   const [gameover, setGameOver] = useState(false)
+  const [play, setPlay] = useState({
+    audio: new Audio(scream),
+    isPlaying: false,
+  });
   const [playerPosition, setPlayerPosition] = useState({
     x: getRandom(32, MAX_X_BOARDER),
     y: getRandom(144, MAX_Y_BOARDER),
   });
+  
+  const playPause = () => {
 
+    // Get state of song
+    let isPlaying = play.isPlaying;
+
+    if (isPlaying) {
+      // Pause the song if it is playing
+
+    } else {
+
+      // Play the song if it is paused
+      play.audio.play();
+    }
+
+    // Change the state of song
+    setPlay({ isPlaying: !isPlaying });
+  };
+  
   useEffect(() => {
     socket.on("connect", () => {
+      playPause();
       setPlayerId(socket.id);
       setPlayers((prevPlayers) => {
         return {
@@ -57,8 +82,10 @@ function Game({ socket }) {
 
     // Update the player health when they are hit
     socket.on("playerHit", (id) => {
+      playPause();
       setPlayers((prevPlayers) => {
         let newPlayers = { ...prevPlayers };
+        console.log("attacking:" + newPlayers[id]);
         newPlayers[id].health -= 25;
         return newPlayers;
       });
@@ -66,6 +93,7 @@ function Game({ socket }) {
 
     // Remove the player when they are killed
     socket.on("playerKilled", (id) => {
+      playPause();
       setPlayers((prevPlayers) => {
         let newPlayers = { ...prevPlayers };
         delete newPlayers[id];
@@ -94,6 +122,7 @@ function Game({ socket }) {
       movePlayer("down");
     } else if (event.keyCode === 32){
       handleAttack();
+      playPause();
   }
   }
   function movePlayer(direction) {
@@ -131,16 +160,13 @@ function Game({ socket }) {
     <div className="Main">
       <div className="game-board">
         {Object.values(players).map((player, i) => (
-          <div
-            key={player.id}
-            className="player"
-            id={`player-${i}`}
-            style={{ left: `${player.x}px`, top: `${player.y}px` }}
-          >
             <Sprite
-            direction={player.direction}
+              key={player.id}
+              className="player"
+              id={`player-${i}`}
+              style={{ left: `${player.x}px`, top: `${player.y}px` }}
+              direction={player.direction}
             />
-          </div>
         ))}
         {gameover && <div className="gameover">GAME OVER!</div>}
       </div>
