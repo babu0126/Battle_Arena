@@ -2,10 +2,11 @@ import express from "express";
 import cors from "cors";
 import http from "http";
 import { Server } from "socket.io";
-import { randomPositionGenerator, randomColourGenerator } from "./Helper.js";
-
-
-
+import {
+  randomPositionGenerator,
+  randomColourGenerator,
+  getRandomPos,
+} from "./Helper.js";
 
 const app = express();
 app.use(cors());
@@ -24,38 +25,55 @@ const io = new Server(server, {
 });
 
 const PLAYER_LIMIT = 4;
+const MAX_X_BOARDER = 1344;
+const MAX_Y_BOARDER = 736;
 
 let players = {};
 let playerInRooms = {};
 
 io.on("connection", (socket) => {
   console.log("A player has connected: ", socket.id);
-  let posX = randomPositionGenerator();
-  let posY = randomPositionGenerator();
+  let posX = getRandomPos(32, MAX_X_BOARDER);
+  let posY = getRandomPos(144, MAX_Y_BOARDER);
   let colour = randomColourGenerator();
-  
-  
-  // Create a new room 
+
+  // Create a new room
   socket.on("create_room", (room, playerName) => {
-    players[socket.id] = { room: room, playerName: playerName, x: posX, y: posY, health: 100, direction: "down", colour: colour };
-    playerInRooms[room] =[];
-    io.emit("room_created", room,playerName, socket.id);
+    players[socket.id] = {
+      room: room,
+      playerName: playerName,
+      x: posX,
+      y: posY,
+      health: 100,
+      direction: "down",
+      colour: colour,
+    };
+    playerInRooms[room] = [];
+    io.emit("room_created", room, playerName, socket.id);
   });
 
-  // Validate room existance and set number of players below 4  
+  // Validate room existance and set number of players below 4
   socket.on("join_room", (room, playerName) => {
-    if(playerInRooms[room] && playerInRooms[room].length < PLAYER_LIMIT) {
-      players[socket.id] = { room: room, playerName: playerName, x: posX, y: posY, health: 100, direction: "down", colour: colour};
-      playerInRooms[room].push({playerName, socket: socket.id, room});
+    if (playerInRooms[room] && playerInRooms[room].length < PLAYER_LIMIT) {
+      players[socket.id] = {
+        room: room,
+        playerName: playerName,
+        x: posX,
+        y: posY,
+        health: 100,
+        direction: "down",
+        colour: colour,
+      };
+      playerInRooms[room].push({ playerName, socket: socket.id, room });
       socket.join(room);
       io.to(socket.id).emit("room_validated", true);
       io.to(room).emit("room_joined", playerInRooms[room], room);
     } else socket.emit("room_validated", false);
   });
-  
+
   socket.on("gameStarted", (room) => {
     io.to(room).emit("initPlayersInGame", players, room);
-  })
+  });
 
   // Add the new player to the game state
   socket.on("move", (data) => {
@@ -69,7 +87,7 @@ io.on("connection", (socket) => {
       id: socket.id,
       x: data.x,
       y: data.y,
-      direction: data.playerDirection
+      direction: data.playerDirection,
     });
   });
 
