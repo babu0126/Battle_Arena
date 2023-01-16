@@ -2,7 +2,10 @@ import express from "express";
 import cors from "cors";
 import http from "http";
 import { Server } from "socket.io";
-import { randomPositionGenerator } from "./Helper.js";
+import { randomPositionGenerator, randomColourGenerator } from "./Helper.js";
+
+
+
 
 const app = express();
 app.use(cors());
@@ -29,11 +32,12 @@ io.on("connection", (socket) => {
   console.log("A player has connected: ", socket.id);
   let posX = randomPositionGenerator();
   let posY = randomPositionGenerator();
+  let colour = randomColourGenerator();
   
   
   // Create a new room 
   socket.on("create_room", (room, playerName) => {
-    players[socket.id] = { room: room, playerName: playerName, x: posX, y: posY, health: 100, direction: "down" };
+    players[socket.id] = { room: room, playerName: playerName, x: posX, y: posY, health: 100, direction: "down", colour: colour };
     playerInRooms[room] =[];
     io.emit("room_created", room,playerName, socket.id);
   });
@@ -41,7 +45,7 @@ io.on("connection", (socket) => {
   // Validate room existance and set number of players below 4  
   socket.on("join_room", (room, playerName) => {
     if(playerInRooms[room] && playerInRooms[room].length < PLAYER_LIMIT) {
-      players[socket.id] = { room: room, playerName: playerName, x: posX, y: posY, health: 100, direction: "down" };
+      players[socket.id] = { room: room, playerName: playerName, x: posX, y: posY, health: 100, direction: "down", colour: colour};
       playerInRooms[room].push({playerName, socket: socket.id, room});
       socket.join(room);
       io.to(socket.id).emit("room_validated", true);

@@ -1,9 +1,8 @@
 import React from "react";
 import "./Game.scss";
 import { useState, useEffect } from "react";
-import Sprite from "../Component/Sprite"
-import scream from '../sounds/Wilhelm-Scream.mp3'
-
+import Sprite from "../Component/Sprite";
+import scream from "../sounds/Wilhelm-Scream.mp3";
 
 const MAX_X_BOARDER = 1344;
 const MAX_Y_BOARDER = 736;
@@ -15,13 +14,12 @@ function getRandom(min, max) {
   // The maximum is inclusive and the minimum is inclusive
 }
 
-
 function Game({ socket }) {
   const [players, setPlayers] = useState({});
   const [playerId, setPlayerId] = useState(null);
   const [playerDirection, setPlayerDirection] = useState("null");
   const [playerAttack, setPlayerAttack] = useState();
-  const [gameover, setGameOver] = useState(false)
+  const [gameover, setGameOver] = useState(false);
   const [play, setPlay] = useState({
     audio: new Audio(scream),
     isPlaying: false,
@@ -30,9 +28,8 @@ function Game({ socket }) {
     x: getRandom(32, MAX_X_BOARDER),
     y: getRandom(144, MAX_Y_BOARDER),
   });
-  
-  const playPause = () => {
 
+  const playPause = () => {
     // Get state of song
     let isPlaying = play.isPlaying;
 
@@ -40,7 +37,6 @@ function Game({ socket }) {
       // Pause the song if it is playing
       play.audio.pause();
     } else {
-
       // Play the song if it is paused
       play.audio.play();
     }
@@ -48,25 +44,16 @@ function Game({ socket }) {
     // Change the state of song
     // setPlay({ isPlaying: !isPlaying });
   };
-  
-console.log("gamepage show players!!!!!!!", players);
+
+  console.log("gamepage show players!!!!!!!", players);
   useEffect(() => {
     socket.on("initPlayersInGame", (players, room) => {
       console.log("initGame player and room!:", players, room);
-      setPlayerId(socket);
+      setPlayerId(socket.id);
       setPlayers(players);
-        // (prevPlayers) => {
-        // return {
-        //   ...prevPlayers,
-        //   [socket.id]: {
-        //     x: playerPosition.x,
-        //     y: playerPosition.y,
-        //     health: 100,
-        //     direction: playerDirection,
-        //   },
-        // };
-      });
-
+      setPlayerPosition({ x: players[socket.id].x, y: players[socket.id].y})
+     
+    });
 
     // Update the position of other players when they move
     socket.on("playerMoved", (data) => {
@@ -127,38 +114,43 @@ console.log("gamepage show players!!!!!!!", players);
   }
   function movePlayer(direction) {
     // if (players[playerId]) {
-      console.log("playerPosition", playerPosition.x);
-      console.log("playerDirction", playerDirection);
-      let newX = playerPosition.x;
-      let newY = playerPosition.y;
+    console.log("playerPosition", playerPosition.x);
+    console.log("playerDirction", playerDirection);
+    let newX = playerPosition.x;
+    let newY = playerPosition.y;
 
-      if (direction === "left" && playerPosition.x > 32) {
-        newX -= 16;
-      } else if (playerPosition.y > 144 && direction === "up") {
-        newY -= 16;
-      } else if (playerPosition.x < MAX_X_BOARDER && direction === "right") {
-        newX += 16;
-      } else if (playerPosition.y < MAX_Y_BOARDER && direction === "down") {
-        newY += 16;
-      }
-      console.log("bf movePlayer function: playerDirection State line 122:", playerDirection);
-      setPlayerDirection(direction);
-      console.log("af movePlayer function: playerDirection State line 122:", playerDirection);
-      setPlayers((prevPlayers) => {
-        return {
-          ...prevPlayers,
-          [playerId]: {
-            ...prevPlayers[playerId],
-            x: newX,
-            y: newY,
-            direction: direction,
-          },
-        };
-      });
-      setPlayerPosition({ x: newX, y: newY });
-      socket.emit("move", { x: newX, y: newY, playerDirection });
+    if (direction === "left" && playerPosition.x > 32) {
+      newX -= 16;
+    } else if (playerPosition.y > 144 && direction === "up") {
+      newY -= 16;
+    } else if (playerPosition.x < MAX_X_BOARDER && direction === "right") {
+      newX += 16;
+    } else if (playerPosition.y < MAX_Y_BOARDER && direction === "down") {
+      newY += 16;
     }
-  
+    console.log(
+      "bf movePlayer function: playerDirection State line 122:",
+      playerDirection
+    );
+    setPlayerDirection(direction);
+    console.log(
+      "af movePlayer function: playerDirection State line 122:",
+      playerDirection
+    );
+    setPlayers((prevPlayers) => {
+      return {
+        ...prevPlayers,
+        [playerId]: {
+          ...prevPlayers[playerId],
+          x: newX,
+          y: newY,
+          direction: direction,
+        },
+      };
+    });
+    setPlayerPosition({ x: newX, y: newY });
+    socket.emit("move", { x: newX, y: newY, playerDirection });
+  }
 
   // Send the player's attack to the server when they attack
   function handleAttack(x, y) {
@@ -171,13 +163,17 @@ console.log("gamepage show players!!!!!!!", players);
     <div className="Main">
       <div className="game-board">
         {Object.values(players).map((player, i) => (
-            <Sprite
-              key={player.id}
-              className="player"
-              id={`player-${i}`}
-              style={{ left: `${player.x}px`, top: `${player.y}px` }}
-              direction={player.direction}
-            />
+          <Sprite
+            key={player.id}
+            className="player"
+            id={`player-${i}`}
+            style={{
+              left: `${player.x}px`,
+              top: `${player.y}px`,
+              backgroundColor: player.colour,
+            }}
+            direction={player.direction}
+          />
         ))}
         {gameover && <div className="gameover">GAME OVER!</div>}
       </div>
