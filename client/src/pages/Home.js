@@ -12,7 +12,6 @@ export default function Home({ socket, user, setUser, song }) {
   const navigate = useNavigate();
   const [room, setRoom] = useState("");
   const [joinRoomId, setJoinRoomId] = useState("");
-  
 
   useEffect(()=> {
       if(room) {
