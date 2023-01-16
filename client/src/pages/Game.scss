@@ -25,18 +25,21 @@
   z-index: 1;
 }
 
-// #player-0 {
-//   background-color: blue;
-// }
-// #player-1 {
-//   background-color: red ;
-// }
-// #player-2 {
-//   background-color: green;
-// }
-// #player-3 {
-//   background-color: yellow;
-// }
+
+
+.playerName {
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 2em;
+  font-family: 'Nosifer', cursive;
+  font-weight: bold;
+  -webkit-text-stroke: 0.1px black;
+  text-align: left;
+  padding: 0.5em 0.5em 0.5em;
+  color: rgb(179, 10, 10);
+}
 
 .gameover {
   position: absolute;
