@@ -17,7 +17,6 @@ function App(props) {
 
   useEffect(() => {
     socket.on("room_joined", (playerList, room) => {
-      console.log("room_joined line 27:", playerList);
       setRoom(room);
       updatePlayerList(playerList, room);
       socket.emit("joined_lobby", room);

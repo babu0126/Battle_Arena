@@ -77,7 +77,6 @@ io.on("connection", (socket) => {
 
   // Add the new player to the game state
   socket.on("move", (data) => {
-    console.log("Server move Data line 55:", data);
     // Update the player's position in the game state
     players[socket.id].x = data.x;
     players[socket.id].y = data.y;

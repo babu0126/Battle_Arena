@@ -38,7 +38,6 @@ function Game({ socket }) {
   useEffect(() => {
     // Set the playerid, players, and player position
     socket.on("initPlayersInGame", (players, room) => {
-      console.log("initGame player and room!:", players, room);
       setPlayerId(socket.id);
       setPlayers(players);
       setPlayerPosition({ x: players[socket.id].x, y: players[socket.id].y });
@@ -106,9 +105,6 @@ function Game({ socket }) {
     }
   }
   function movePlayer(direction) {
-    // if (players[playerId]) {
-    console.log("playerPosition", playerPosition.x);
-    console.log("playerDirction", playerDirection);
     let newX = playerPosition.x;
     let newY = playerPosition.y;
     if (direction === "left" && playerPosition.x > 32) {
@@ -120,9 +116,7 @@ function Game({ socket }) {
     } else if (playerPosition.y < MAX_Y_BOARDER && direction === "down") {
       newY += 16;
     }
-    // console.log("bf movePlayer function: playerDirection State line 122:", playerDirection);
     setPlayerDirection(direction);
-    // console.log("af movePlayer function: playerDirection State line 122:", playerDirection);
     setPlayers((prevPlayers) => {
       return {
         ...prevPlayers,

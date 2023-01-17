@@ -6,8 +6,7 @@ export default function Lobby({ players, socket, room }) {
   
   const navigate = useNavigate();
   const playersIds = Object.keys(players);
-  const isFourPlayers = playersIds.length === 2;
-  console.log("Players: " + players)
+  const isFourPlayers = playersIds.length <= 4;
   
  
   function handleStartGame() {
@@ -33,7 +32,7 @@ export default function Lobby({ players, socket, room }) {
         <button id="start-game-button" onClick={handleStartGame} disabled={!isFourPlayers}>
           Start Game
         </button>
-        {!isFourPlayers && <p>{playersIds.length}/2 players have joined</p>}
+        {!isFourPlayers && <p>{playersIds.length}/4 players have joined</p>}
       </div>
     </div>
   );

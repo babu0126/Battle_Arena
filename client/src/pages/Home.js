@@ -15,7 +15,6 @@ export default function Home({ socket, user, setUser, song }) {
 
   useEffect(()=> {
       if(room) {
-        // song.play();
         console.log("Home-line25-roomid", room);
         joinRoom(room);
       }
