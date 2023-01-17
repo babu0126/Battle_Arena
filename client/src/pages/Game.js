@@ -91,16 +91,18 @@ function Game({ socket }) {
   }, [players]);
 
   function handleKeyPress(event) {
-    if (event.keyCode === 37) {
-      movePlayer("left");
-    } else if (event.keyCode === 38) {
-      movePlayer("up");
-    } else if (event.keyCode === 39) {
-      movePlayer("right");
-    } else if (event.keyCode === 40) {
-      movePlayer("down");
-    } else if (event.keyCode === 32) {
-      handleAttack();
+    if (players[socket.id]) {
+      if (event.keyCode === 37) {
+        movePlayer("left");
+      } else if (event.keyCode === 38) {
+        movePlayer("up");
+      } else if (event.keyCode === 39) {
+        movePlayer("right");
+      } else if (event.keyCode === 40) {
+        movePlayer("down");
+      } else if (event.keyCode === 32) {
+        handleAttack();
+      }
     }
   }
   function movePlayer(direction) {
@@ -109,33 +111,31 @@ function Game({ socket }) {
     console.log("playerDirction", playerDirection);
     let newX = playerPosition.x;
     let newY = playerPosition.y;
-    if (players[socket.id]) {
-      if (direction === "left" && playerPosition.x > 32) {
-        newX -= 16;
-      } else if (playerPosition.y > 144 && direction === "up") {
-        newY -= 16;
-      } else if (playerPosition.x < MAX_X_BOARDER && direction === "right") {
-        newX += 16;
-      } else if (playerPosition.y < MAX_Y_BOARDER && direction === "down") {
-        newY += 16;
-      }
-      // console.log("bf movePlayer function: playerDirection State line 122:", playerDirection);
-      setPlayerDirection(direction);
-      // console.log("af movePlayer function: playerDirection State line 122:", playerDirection);
-      setPlayers((prevPlayers) => {
-        return {
-          ...prevPlayers,
-          [playerId]: {
-            ...prevPlayers[playerId],
-            x: newX,
-            y: newY,
-            direction: direction,
-          },
-        };
-      });
-      setPlayerPosition({ x: newX, y: newY });
-      socket.emit("move", { x: newX, y: newY, playerDirection });
+    if (direction === "left" && playerPosition.x > 32) {
+      newX -= 16;
+    } else if (playerPosition.y > 144 && direction === "up") {
+      newY -= 16;
+    } else if (playerPosition.x < MAX_X_BOARDER && direction === "right") {
+      newX += 16;
+    } else if (playerPosition.y < MAX_Y_BOARDER && direction === "down") {
+      newY += 16;
     }
+    // console.log("bf movePlayer function: playerDirection State line 122:", playerDirection);
+    setPlayerDirection(direction);
+    // console.log("af movePlayer function: playerDirection State line 122:", playerDirection);
+    setPlayers((prevPlayers) => {
+      return {
+        ...prevPlayers,
+        [playerId]: {
+          ...prevPlayers[playerId],
+          x: newX,
+          y: newY,
+          direction: direction,
+        },
+      };
+    });
+    setPlayerPosition({ x: newX, y: newY });
+    socket.emit("move", { x: newX, y: newY, playerDirection });
   }
 
   // Send the player's attack to the server when they attack

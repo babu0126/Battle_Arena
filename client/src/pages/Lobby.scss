@@ -16,8 +16,20 @@ div.Lobby-container {
   justify-items: center;
   justify-content: space-between;
   padding: 20px;
-  font-size: 2em;
+  font-size: 1.8em;
+  font-family: 'Nosifer', cursive;
+  font-weight: bold;
+  -webkit-text-stroke: 0.3px black;
+  color: rgb(119, 7, 7);
 }
+
+#Lobby-room {
+  justify-content: center;
+  font-size: 2.5em;
+}
+
+// text-align: left;
+// padding: 0.5em 0.5em 0.5em;
 
 .Lobby-button {
   height: 100%;
