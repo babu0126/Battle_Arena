@@ -102,7 +102,7 @@ io.on("connection", (socket) => {
 
         if (distance < 50) {
           // Reduce the hit player's health
-          player.health -= 25;
+          player.health -= 100;
           if (player.health <= 0) {
             // Broadcast the player is killed, and remove the player from the game state
             io.emit("playerKilled", id);
