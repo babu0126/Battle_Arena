@@ -64,7 +64,7 @@ function Game({ socket }) {
       setPlayers((prevPlayers) => {
         let newPlayers = { ...prevPlayers };
         // console.log("attacking:" + newPlayers[id]);
-        newPlayers[id].health -= 25;
+        newPlayers[id].health -= 100;
         return newPlayers;
       });
     });
@@ -155,7 +155,6 @@ function Game({ socket }) {
             <Sprite
               key={player.id}
               className="player"
-              id={`player-${i}`}
               playerName={player.playerName}
               style={{
                 left: `${player.x}px`,
