@@ -15,6 +15,7 @@ export default function Home({ socket, user, setUser, song }) {
 
   useEffect(()=> {
       if(room) {
+        song.play();
         console.log("Home-line25-roomid", room);
         joinRoom(room);
       }
@@ -43,7 +44,7 @@ export default function Home({ socket, user, setUser, song }) {
     <div className="Home-container">
       <div className="Home-container-left">
         <h1>
-          Battle <br /> Arena
+          Battle <br /> Royale
         </h1>
       </div>
       <div className="Home-container-right">
