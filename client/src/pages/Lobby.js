@@ -6,7 +6,7 @@ export default function Lobby({ players, socket, room }) {
   
   const navigate = useNavigate();
   const playersIds = Object.keys(players);
-  const isFourPlayers = playersIds.length <= 4;
+  const isFourPlayers = playersIds.length >= 2;
   
  
   function handleStartGame() {

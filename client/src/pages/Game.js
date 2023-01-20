@@ -70,8 +70,8 @@ function Game({ socket }) {
 
     // Remove the player when they are killed
     socket.on("playerKilled", (id) => {
-      setPlay.audio = new Audio(scream);
-      playPause();
+      // setPlay.audio = new Audio(scream);
+      // playPause();
       setPlayers((prevPlayers) => {
         let newPlayers = { ...prevPlayers };
         delete newPlayers[id];
@@ -134,8 +134,8 @@ function Game({ socket }) {
 
   // Send the player's attack to the server when they attack
   function handleAttack(x, y) {
-    setPlay((play.audio = new Audio(swing)));
-    playPause();
+    // setPlay((play.audio = new Audio(swing)));
+    // playPause();
     socket.emit("attack", { x: playerPosition.x, y: playerPosition.y });
     setPlayerAttack(true);
     setTimeout(() => setPlayerAttack(false), 200);
